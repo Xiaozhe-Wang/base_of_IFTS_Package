@@ -1,0 +1,5 @@
+mode: 'Hard_Decision'
+
+Hard_Decision:
+  mode: 'llr' # nearest, llr, or approxllr
+  data_mode: 'numpy'  # numpy or torch

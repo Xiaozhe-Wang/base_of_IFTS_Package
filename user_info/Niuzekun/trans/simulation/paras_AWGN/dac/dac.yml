@@ -1,0 +1,17 @@
+library: ['Ideal_DAC', 'Real_DAC']
+mode: 'Ideal_DAC' # 
+Ideal_DAC: 
+  sam_rate: 80             # sample rate in Gsample/s
+  memory_depth: 262144      # memory depth in DAC
+
+Real_DAC: 
+  sam_rate: 80             # sample rate in Gsample/s
+  memory_depth: 262144      # memory depth in DAC
+  
+  filter_conifg:
+    mode: 'butter'
+    
+  imperfection_config:
+    offset: 0.0
+    gain: 0.0
+    nonlinearity: 0.0

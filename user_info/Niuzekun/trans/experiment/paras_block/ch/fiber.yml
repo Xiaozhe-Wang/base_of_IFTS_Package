@@ -1,0 +1,40 @@
+rand_seed: 99876
+sig_power_dbm : -4.0
+channel_num : 21 # index of channel under test 
+total_len: 1600 # km
+wavelength: 1550 # nm
+
+# model algorithm
+mode: 'B2B'  # B2B, Over_fiber
+# CD
+D: 17      # CD Parameter. Default: 17 (ps/nm.km)
+S: 0       # CD slope. Default: 0.075  ps/(nm^2.km)
+pmd: 0
+# Loss
+alpha_inndB: 0.2 # Fiber Loss. Default: 0.2
+# Kerr Nonlinearity
+n2: 2.6e-20
+Aeff: 80
+
+fiber_len:
+  span1: 80.7396
+  span2: 81.181
+  span3: 80.7314
+  span4: 80.5434
+  span5: 81.4508
+  span6: 81.2628
+  span7: 81.1075
+  span8: 81.2873
+  span9: 80.2137
+  span10: 81.9031
+  span11: 80.8213
+  span12: 80.6906
+  span13: 80.7151
+  span14: 80.7478
+  span15: 80.7314
+  span16: 80.6579
+  span17: 80.6497
+  span18: 80.666
+  span19: 81.2955
+  span20: 81.2464
+  

@@ -1,0 +1,10 @@
+Module_Name: 'awgn'
+Module_Model: 'awgn_np'
+init_flag: '1'  # Instantiation switch, a value of 1 is to enable instantiation
+
+awgn_np:
+  SNR: 10
+  seed: 123456
+  dtype: 'float32'
+  device: 'cpu'
+  verbose: False 

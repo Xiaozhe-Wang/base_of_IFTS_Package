@@ -1,0 +1,283 @@
+Simu_Para:
+  # Path
+  code_path : '/home/Niuzekun/code/tools/v2.0/experiment_main/'
+  figure_path : '/home/Niuzekun/code/tools/v2.0/tmp/figure/'
+  tx_data_path: '/home/ospan/AWG_TX/'
+  rx_data_path: '/home/ospan/FiberTrans/Shared_Disk/Data/experiments/10span/'
+  # sam_rate
+  awg_memory_depth: 262144
+  tx_sam_rate:  80 # 80 Gsam/sec for Fujistu
+  rx_sam_rate: 100 # 100 Gsam/sec for Tec
+  # data load information
+  tx_load_data: 1
+  rx_load_data: 1
+  is_ase: 0
+  is_bidi: 0
+  is_b2b: 1
+  # expriments information
+  sym_rate: 50 # GHz
+  bits_per_sym: 4
+  nPol: 2
+  sig_power_dbm : 3
+  channel_num : 1 # index of channel under test 
+  # control for sig, tx, rx
+  # sig
+  coding : 0
+  do_pcs : 0
+  modulation : 1
+  nn_modu : 0 
+  nn_demodu : 0
+  demodulation : 1
+  decoding : 0
+  # tx
+  pulse_shaping: 1
+  pre_cdcom : 0
+  pre_emph : 1
+  skew_eq : 1
+  tx_nn_eq : 0
+  clock_leakage: 0
+  clipping: 1
+  quantization: 1
+  # ch
+  dac : 0
+  transmitter : 0
+  wss : 1
+  laser : 1
+  channel_type : 1  # 0:Experiments, 1: Simu_fiber, 2: Simu_AWGN
+  do_cdm : 0        
+  span_num: 0
+  load_len: 1       # 1: read span_len.yml 0: set a constant = span_len
+  span_len : 80     # 
+  total_len : 0    # 
+  channel_space : 100
+  receiver : 1
+  adc : 0
+  # rx
+  lpf : 1
+  ckl_com : 1
+  iq_balance: 1
+  iq_deskew: 1
+  nl_com : 0
+  cdcom : 1
+  mimo : 1
+  symchronization : 1
+  cpe : 1
+  clofo : 1
+  real_mimo : 1
+  # Others
+  modulation_list : {'2': 'QPSK', '3': '8QAM', '4': '16QAM', '5':'32QAM', '6': '64QAM'}
+  caclu_with_gpu : 1
+  data_mode : 'fine_tune'
+  device: "cuda:3"
+  infor_print_arr : [0, 0, 0]
+  fig_plot_arr : [0, 0, 0]
+  # infor_print_arr : [1, 1, 1]
+  # fig_plot_arr : [1, 1, 1]
+  save_data_arr : [0, 0, 0]
+
+Sig_Para:
+  bit_load : 0
+  front_sym_num: 2048
+  
+  # probalisitic shaping configuration
+  pcs_config:
+    mode: 'MB'
+    args:
+      ps_mi: 3.9
+      do_ccdm: 0  # open flag for CCDM
+
+  # demodulation configuration
+  demod_config:
+    mode: 'llr' # 'bit', 'int', 'llr', or 'approxllr'
+    data_mode: 'numpy'
+
+Ch_Para:
+  ch_random: 0  # control the noise and channel random effects
+  rand_seed: 643 # control random seed
+
+  wss_config:
+    type: 'brickwall_filter'  # brickwall_filter, wss_filter
+    args: {}
+
+  laser_config:
+    type: 'naive'
+    args:
+      tx_laser_width: 0.08 # GHz
+      rx_laser_width: 0.08 # GHz
+      lofo: 0.0 # GHz
+  
+  edfa_config:
+    model_name: 'naive_pass'  # naive_pass, no_noise_pass
+    nf_db: 5 # dB
+      
+  receiver_config:
+    type: 'naive'
+    args:
+      add_noise: 1 
+      n_power_dBm: -20.6751 # [-20.6751 -21.6751 -21.7] dBm
+  
+  fiber_config:
+    len_config_path: '/home/Niuzekun/code/tools/v2.0/experiment_main/config/span_len.yml'
+    wavelength: 1550 # nm
+    # CD
+    D: 17      # CD Parameter. Default: 17 (ps/nm.km)
+    S: 0       # CD slope. Default: 0.075  ps/(nm^2.km)
+    pmd: 0
+    # Loss
+    alpha_inndB: 0.2 # Fiber Loss. Default: 0.2
+    # Kerr Nonlinearity
+    n2: 2.6e-20
+    Aeff: 80
+    # model algorithm
+    type: 'SSFM'  # SSFM, NN, NLIN
+    args:
+      Manakov: 1    # 1: manakov; 0: CNlSE
+      step_config:
+        dz_mode: 'np'    # np: Nonlinear Phase, c: Constant Step
+        dphimax: 0.005  # Max. nonlinear phase rotation in each step (rad)
+      
+      pmd_config:
+        dgd_manual: 0
+        dgd_total: 0.2  # Differential group delay ps
+        psp_manual: 0
+        pmd_coeff_random: 0
+        pmd_dz_random: 0
+        pmd_coeff: 0.05 # Default: 0.05 ps/sqrt(km); Polarization mode dispersion coefficient. If Birefringence
+                        # type is “Stochastic”, this is the value of the PMD
+                        # parameter. If “Deterministic”, parameter is disabled. 
+        pmd_trunk_num: 80 # wave plates for PMD simulation
+        
+Tx_Para:
+  tx_nn_eq : 0
+
+  pulse_shaping_config:
+    type: 'rrc'
+    args:
+      upsam: 4
+      roll_off: 0.1
+  
+  pre_cdcom_config:
+    cd_len: 0
+
+  pre_emph_config:
+    data_mode: 'tensor'
+    args:
+      s21_path: '/home/Niuzekun/code/tools/v2.0/experiment_main/config/awg_s21.npz'
+
+  cl_com_config: 
+    data_mode: 'numpy'
+
+  iq_deskew_config:
+    mode: 'freq'
+    data_mode: 'numpy'
+    args:
+      skew_list: [-1.35, 0, -1.0, 0]
+  
+  clipping_config:
+    clipping_ratio: 9.5
+  
+  quantization_config:
+    resolution_bits: 8
+    data_gain: [255, 255, 255, 255]      # max value is 255
+    # self.data_gain = [170, 170, 170, 170]      # max value is 255
+    # self.data_gain = [235, 221, 221, 242]      # max value is 255
+    data_switch: [1, 1, 1, 1]      # 1 or 0
+  
+Rx_para:
+  oscop_sam_num: 2000000
+  frame_num: 6
+  ckl_com_config: 
+    data_mode: 'numpy'
+  iq_deskew_config:
+    mode: 'freq'
+    data_mode: 'numpy'
+    args:
+      # skew_list: [-13.32746592, 13.33457317, -14.12980795, 14.03374108] # old
+      # skew_list: [-21.86769403, 18.41180868, -20.70665849, 20.59030896] # new
+      skew_list: [-17.9613804,  18.2110843, -19.8461730, 17.2096270] # new
+
+  lpf_config:
+    mode: 'brickwall' # brickwall, bessel, butter, gaussian, rc, rrc
+    args:
+      roll_off: 0.1
+      max_lofo: 0.5   # GHz
+      comp_s21: 1
+      s21_path: '/home/Niuzekun/code/tools/v2.0/experiment_main/config/icr_s21.npz'
+    
+  iq_balance_config:
+    type: 'GSOP'
+
+  nl_com_config:
+    type: 'DBP'
+    args:
+      sym_sam: 2
+      sps: 50
+      nl_coeff: 1
+      dz_mode: 'c'
+
+  cd_com_config:
+    type: 'FD_2x2'
+    sam_per_sym: 2
+    args:
+      cdc_length: 'auto'
+    
+  mimo_config:
+    mode: 'TD_4x2'
+    half_taps_num: 40
+    out_sym_num: 1
+    upsam: 2 
+    block_size: 64
+    err_calcu: 'mean' # mean, individual
+    data_mode: 'numpy'
+    args:
+      algo_type: 'mma'
+      h_ortho: 0
+      tap_init_mode: 1
+      tap_init_value: 0.5
+      cma_pretrain: 1
+      pre_train_iter: 2
+      train_epoch: 8
+      lr: 2.5e-4 
+
+  clofo_config:
+    mode: 'freq_method'  # freq_method
+    block_num: 1        
+    parallelism: 1
+    window_size: 61
+    data_mode: 'tensor'
+    args: {}
+
+  cpe_config:
+    mode: 'bps'
+    block_num: 1024        # block implementation is not supported
+    parallelism: 64
+    window_size: 31
+    data_mode: 'numpy'
+    args:
+      ml: 1
+      test_num: 64
+      data_aided: 1
+
+  symchron_config:
+    mode: '4x4'
+    corr_num: 256
+    data_mode: 'numpy'
+    args: {}
+
+  real_mimo_config:
+    mode: 'TD_4x4'
+    half_taps_num: 30
+    out_sym_num: 1
+    upsam: 1 
+    block_size: 64
+    err_calcu: 'mean' # mean, individual
+    data_mode: 'numpy'
+    args:
+      algo_type: 'lms'
+      h_ortho: 0
+      tap_init_mode: 1
+      tap_init_value: 1.0
+      cma_pretrain: 0
+      pre_train_iter: 0
+      train_epoch: 8
+      lr: 1.0e-5

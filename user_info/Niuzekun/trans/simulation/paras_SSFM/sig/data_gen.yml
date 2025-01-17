@@ -1,0 +1,8 @@
+gen_mode: 'Arbitary_Wave' # 'Prob_Shaping' and 'Uniform_Bit'
+
+Arbitary_Wave:
+  mean: 0.0
+  var: 1.0
+  
+
+Prob_Shaping:

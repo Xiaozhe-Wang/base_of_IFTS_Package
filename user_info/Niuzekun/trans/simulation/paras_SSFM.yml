@@ -1,0 +1,360 @@
+Simu_Para:
+  user_name: 'Shiminghui'
+  # Choose the program mode
+  program: 'trans'  # trans, ai_algo
+  time_record: 0
+  # Path
+  run_id: '000' #  '000' and 'test' for Test
+  exp_align_config_path: '/Code/Niu/IFTS/main/trans/simulation/config/data/'
+  len_config_path:  '/Code/Niu/IFTS/main/trans/experiment/config/span_len.yml'
+  result_root_path: '/Personal/Shiminghui/results/Simu_main/'
+  awg_root_path: '/home/ospan/AWG_load_data/'
+  save_data_root_path: '/Personal/Shiminghui/results/Simu_main/'
+  dsp_mode : ['tradition', 'tradition'] # vanilla, tradition, learned
+  time_record: 0
+  # sam_rate
+  awg_memory_depth: 524288    # 262144 131072
+  tx_sam_rate: 280 # 80 Gsam/sec for Fujistu
+  rx_sam_rate: 150 # 100 Gsam/sec for Tec
+  # data load information
+  run_tx_dsp: 1        # 1: generate data by program; 0: load data from file if needed
+  run_dac: 0           # 1: run AWG; 0: run 'resample' in the simulation or stop at 'tx_dsp' in the experiment
+  run_ch: 1            # 1: input to channel; 0: stop at tx
+  run_adc: 0           # 1: run Oscope; 0: load data from file
+  run_rx_dsp: 1        # 1: load data from file; 0: generate data by program
+  set_edfa: 0
+  is_ase: 0
+  is_bidi: 0
+  is_b2b: 0
+  calcu_osnr: 0
+  # expriments information
+  sym_rate: 140 # GHz
+  bits_per_sym: 4
+  nPol: 2
+  sig_power_dbm : 8.5
+  channel_num : 11 # index of channel under test 
+  # control for sig, tx, rx
+  # sig
+  coding : 0
+  do_pcs : 0
+  pcs_mi : 4
+  modulation : 1
+  nn_modu : 0 
+  nn_demodu : 0
+  demodulation : 1
+  decoding : 0
+  # tx
+  pulse_shaping: 1
+  pre_cdcom : 0
+  pre_emph : 0
+  skew_eq : 0
+  tx_nn_eq : 0
+  clock_leakage: 0
+  clipping: 0
+  quantization: 0
+  # ch
+  scm: 0
+  ch_upsam: 4
+  dac : 0
+  transmitter : 0
+  wss : 1
+  laser : 1
+  tx_amp : 1
+  rx_amp : 1
+  channel_type : 1  # 0:Experiments, 1: Simu_fiber, 2: Simu_AWGN
+  do_cdm : 0        
+  span_num: 0
+  load_len: 0       # 1: read span_len.yml 0: set a constant = span_len
+  span_len : 80     # 
+  total_len : 80    # 
+  channel_space : 150
+  receiver : 1
+  adc : 0
+  # rx
+  mimo_block_dsp: 0 #当开启时，请把syn、cpe、clofo关闭
+  lpf : 1
+  ckl_com : 0
+  iq_balance: 1
+  iq_deskew: 0
+  nl_com : 0
+  cdcom : 1
+  mimo : 1
+  real_mimo : 0
+  synchronization : 1
+  cpe : 1
+  clofo : 1
+  # Others
+  modulation_list : {'2': 'QPSK', '3': '8QAM', '4': '16QAM', '5':'32QAM', '6': '64QAM'}
+  caclu_with_gpu : 1
+  data_mode : 'hybrid'   # numpy, torch, hybrid, config_assign
+  device: "cuda:4"
+  torch_data_type: 'double'  # double float
+  infor_print_arr : [1, 0, 1, 1]
+  fig_plot_arr : [0, 0, 0, 0]
+  save_data_arr : [0, 0, 0, 0]
+  log_verbosity : 3     # 3 (DEBUG) < 2 (INFO) < 1 (WARNING) < 0 (ERROR)
+  # link manage
+  do_link_manage : 0
+  cd_manage_arr : [-80.,30.,-35.,40.,0.,0. ]
+
+Sig_Para:
+  rand_seed: 1112
+  bit_load : 0
+  front_sym_num: 2048
+  
+  # probalisitic shaping configuration
+  pcs_config:
+    mode: 'MB'
+    args:
+      do_ccdm: 0  # open flag for CCDM
+
+  # demodulation configuration
+  demod_config:
+    mode: 'llr' # 'bit', 'int', 'llr', or 'approxllr'
+    data_mode: 'numpy'
+
+Ch_Para:
+  rand_seed: 2497 # control random seed
+
+  awgn_config:
+    snr_db: 20
+
+  wsm_config:     # multiplexing
+    mode: 'brickwall_filter'  # brickwall_filter, wss_filter
+    args:
+      sig_p_align: 0 
+      sig_p_per_ch: -13  # signal out power dBm
+  
+  wsd_config:     # demultiplexing
+    mode: 'brickwall_filter'  # brickwall_filter, wss_filter
+    args:
+      sig_p_per_ch: 0   # signal out power dBm
+
+  tx_laser_config:
+    mode: 'naive'
+    args:
+      rand_seed: 15673
+      laser_width: 0.25 # MHz   # 0.15MHz
+      lofo: 0.0 # GHz
+
+  rx_laser_config:
+    mode: 'naive'
+    args:
+      rand_seed: 78932
+      laser_width: 0.26 # MHz
+      lofo: 0.3 # GHz
+  
+  tx_edfa_config:
+    mode: 'naive_pass'  # naive_pass, no_noise_pass
+    nf_db: 5 # dB
+    rand_seed: 95512
+
+  edfa_config:
+    mode: 'naive_pass'  # naive_pass, no_noise_pass
+    nf_db: 5 # dB
+    rand_seed: 84572
+
+  rx_edfa_config:
+    mode: 'naive_pass'  # naive_pass, no_noise_pass
+    nf_db: 5 # dB
+    sig_out_p: 0        # dBm 
+    rand_seed: 55843
+
+  icr_config:
+    mode: 'naive'
+    args:
+      rand_seed: 36521
+      add_noise: 1 
+      n_power_dBm: -21.6751 # [-20.6751 -21.6751 -21.7] dBm
+
+  fiber_config:
+    rand_seed: 99876
+    wavelength: 1550 # nm
+    # CD
+    D: 17      # CD Parameter. Default: 17 (ps/nm.km)
+    S: 0       # CD slope. Default: 0.075  ps/(nm^2.km)
+    pmd: 0
+    # Loss
+    alpha_inndB: 0.2 # Fiber Loss. Default: 0.2
+    # Kerr Nonlinearity
+    n2: 2.6e-20
+    Aeff: 80
+    # model algorithm
+    mode: 'SSFM'  # SSFM, NN, NLIN
+    args:
+      Manakov: 1    # 1: manakov; 0: CNlSE
+      step_config:
+        dz_mode: 'np'    # np: Nonlinear Phase, c: Constant Step
+        dphimax: 0.005  # Max. nonlinear phase rotation in each step (rad)
+      
+      pmd_config:
+        dgd_manual: 0
+        dgd_total: 0.45  # Differential group delay ps [0.16, 8]
+        psp_manual: 0
+        pmd_coeff_random: 0
+        pmd_dz_random: 0
+        pmd_coeff: 0.05 # Default: 0.05 ps/sqrt(km); Polarization mode dispersion coefficient. If Birefringence
+                        # type is “Stochastic”, this is the value of the PMD
+                        # parameter. If “Deterministic”, parameter is disabled. 
+                        # [0.0447, 2.236]
+        pmd_trunk_num: 80 # wave plates for PMD simulation
+        
+Tx_Para:
+  rand_seed: 2595
+  tx_nn_eq : 0
+  pulse_shaping_config:
+    type: 'rrc'
+    args:
+      upsam: 4
+      roll_off: 0.1
+  
+  pre_cdcom_config:
+    cd_len: 0
+
+  pre_emph_config:
+    data_mode: 'torch'
+    args:
+      s21_path: '/home/Niuzekun/code/tools/v2.0/experiment_main/config/awg_s21.npz'
+
+  cl_com_config: 
+    data_mode: 'numpy'
+
+  iq_deskew_config:
+    mode: 'freq'
+    data_mode: 'numpy'
+    args:
+      skew_list: [-1.35, 0, -1.0, 0]
+  
+  clipping_config:
+    clipping_ratio: 9.0
+  
+  quantization_config:
+    resolution_bits: 8
+    data_gain: [255, 255, 255, 255]      # max value is 255    [-128, 127]
+    data_switch: [1, 1, 1, 1]      # 1 or 0
+  
+Rx_Para:
+  rand_seed: 48561
+  frame_num: 1
+  sam_rate_bias: 0.0
+  ckl_com_config: 
+    data_mode: 'numpy'
+  iq_deskew_config:
+    mode: 'freq'
+    data_mode: 'torch'
+    args:
+      skew_list: [0,0,0,0] 
+      # skew_list: [-13.32746592, 13.33457317, -14.12980795, 14.03374108] # old
+      # skew_list: [-18.0661049, 18.0876316, -19.9836891, 17.0423810] # new
+      # skew_list: [-17.9613804,  18.2110843, -19.8461730, 17.2096270] # new
+
+  lpf_config:
+    mode: 'rrc' # brickwall, bessel, butter, gaussian, rc, rrc
+    args:
+      # filter_bw: 50
+      roll_off: 0.1
+      max_lofo: 0.5   # GHz
+      comp_s21: 0
+      s21_path: '/home/Niuzekun/code/tools/v2.0/experiment_main/config/icr_s21.npz'
+    
+  iq_balance_config:
+    type: 'GSOP'
+
+  nl_com_config:
+    type: 'DBP'
+    args:
+      sym_sam: 2
+      sps: 50
+      nl_coeff: 1
+      dz_mode: 'c'
+
+  cd_com_config:
+    type: 'FD_2x2'
+    # sam_per_sym: 2
+    args:
+      cdc_length: 'auto'
+    
+  mimo_config:
+    mode: 'TD_2x2'
+    half_taps_num: 40
+    out_sym_num: 1
+    upsam: 2 
+    block_size: 64
+    err_calcu: 'mean' # mean, individual
+    data_mode: 'numpy'
+    args:
+      algo_type: 'mma'
+      h_ortho: 1
+      tap_init_mode: 1
+      tap_init_value: 0.5
+      cma_pretrain: 1
+      pre_train_iter: 2
+      train_num: 20480
+      raius_idx: -1
+      train_epoch: 6 #6
+      lr: 5.3e-4  #2.8e-4  5.3e-4   
+      lms_lr: 5.3e-4
+
+  clofo_config:
+    mode: 'freq_method'  # freq_method
+    block_num: 1        
+    parallelism: 1
+    window_size: 61
+    data_mode: 'torch'
+    args: {}
+
+  cpe_config:    # pilot 辅助 
+    args:
+      ml: 1
+      test_num: 8
+      data_aided: 1
+
+  synchron_config:
+    mode: '2x4'
+    corr_num: 512
+    data_mode: 'numpy'
+    args: {}
+
+  real_mimo_config:
+    mode: 'TD_4x4'
+    half_taps_num: 30
+    out_sym_num: 1
+    upsam: 1 
+    block_size: 64
+    err_calcu: 'mean' # mean, individual
+    data_mode: 'numpy'
+    args:
+      algo_type: 'lms'
+      h_ortho: 0
+      tap_init_mode: 1
+      tap_init_value: 1.0
+      cma_pretrain: 0
+      pre_train_iter: 0
+      train_epoch: 8
+      lr: 1.0e-6
+
+Logger_config:
+  version: 1 
+  disable_existing_loggers: false
+  formatters: 
+    simple: 
+      format: "%(message)s"
+    datetime: 
+      format: "%(process)s - %(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  handlers:
+    console:
+      class: "logging.StreamHandler"
+      level: "DEBUG"
+      formatter: "simple"
+      stream: "ext://sys.stdout"
+    info_file_handler: 
+      class: "logging.handlers.RotatingFileHandler" 
+      level: "INFO"
+      formatter: "datetime"
+      filename: "info.log"
+      maxBytes: 10485760
+      backupCount: 20
+      encoding: "utf8"
+  root: 
+    level: "INFO"
+    handlers: ["console", "info_file_handler"]

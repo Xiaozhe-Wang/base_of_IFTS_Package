@@ -1,0 +1,108 @@
+control:
+  run_id: '000' #  '000' and 'test' for Test
+  time_record: 1
+  run_sig: 1      
+  run_tx_dsp: 0         # 1: generate data by program; 0: load data from file if needed
+  run_tx_device: 0            # 1: run AWG; 0: run 'resample' in the simulation or stop at 'tx_dsp' in the experiment
+  run_ch: 0             # 1: input to channel; 0: stop at tx
+  run_rx_device: 0            # 1: run Oscope; 0: load data from file
+  run_rx_dsp: 1         # 1: load data from file; 0: generate data by program
+  run_gpu : 1
+  log_verbosity:    3     # 3 (DEBUG) < 2 (INFO) < 1 (WARNING) < 0 (ERROR)
+  infor_print_arr:  [1, 1, 1, 1, 1, 1]  # sig, txdsp, dac, ch, adc, rxdsp
+  fig_plot_arr:     [1, 1, 1, 1, 1, 1]
+  save_data_arr:    [0, 0, 0, 0, 0, 0]  
+
+path:
+  mode: 'auto'   # auto, manual
+  auto:
+    tx_device_save: '/home/ospan/AWG_load_data/'
+    rx_device_save: '/Personal/Niuzekun/Data/' 
+    result: '/Personal/Niuzekun/IFTS_results/'
+  manual:
+    tx_device_save: '/home/ospan/AWG_load_data/'
+    rx_device_save: '/Personal/Niuzekun/Data/' 
+    result: '/Personal/Niuzekun/IFTS_results/'
+
+sig:
+  sym_rate: 60 # GHz
+  sym_num: 'auto' # 2^14, 'auto': defined by DAC sam_num
+  rand_seed: 510505
+  bits_per_sym: 4
+  discard_num_in_margin: 4096
+  pilot_num: 0
+  nPol: 2
+
+tx_device:
+  dac_memory_depth: 307200
+  dac_sam_rate: 120         # 80 Gsam/sec for Fujistu, 120Gsam/sec for M8194A
+
+tx_dsp:
+  mode: 'tradition' # tradition, block, ldsp, ldbp
+  frame_num: 'auto' # 1, 'auto': 1 frame
+
+ch:
+  mode: 'fiber' # awgn, fiber, fiber_nn, fiber_p2mp
+
+rx_device:
+  adc_sam_num: 8.0e+06
+  adc_sam_rate: 100
+
+rx_dsp:
+  mode: 'block' # tradition, block, ldsp, ldbp
+  frame_num: 'auto' # 24, 'auto': defined by DAC sam_num
+  up_sam: 1.25
+  ch_info:
+    wavelength: 1550 # nm
+    # CD
+    D: 17      # CD Parameter. Default: 17 (ps/nm.km)
+    S: 0       # CD slope. Default: 0.075  ps/(nm^2.km)    
+    # Kerr Nonlinearity
+    n2: 2.6e-20
+    Aeff: 80
+    # Fiber
+    total_len: 0  # km, auto
+  
+device:
+  data_mode : 'hybrid'   # numpy, torch, hybrid, config_assign
+  device    : 'cuda:0'
+  torch_data_mode:  'float'  # double float
+
+plot:
+  plot_sym_num: 100000
+  plot_sym_start: 10000
+  font:
+    family: 'Times New Roman'
+    size: 12
+    weight: 'normal'
+    style: 'normal'
+  dpi: 300
+  default_colour: 'gold'
+  xlim: [-1.5, 1.5]
+  ylim: [-1.5, 1.5]
+
+logger:
+  version: 1 
+  disable_existing_loggers: false
+  formatters: 
+    simple: 
+      format: "%(message)s"
+    datetime: 
+      format: "%(process)s - %(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  handlers:
+    console:
+      class: "logging.StreamHandler"
+      level: "DEBUG"
+      formatter: "simple"
+      stream: "ext://sys.stdout"
+    info_file_handler: 
+      class: "logging.handlers.RotatingFileHandler" 
+      level: "INFO"
+      formatter: "datetime"
+      filename: "info.log"
+      maxBytes: 10485760
+      backupCount: 20
+      encoding: "utf8"
+  root: 
+    level: "INFO"
+    handlers: ["console", "info_file_handler"]
